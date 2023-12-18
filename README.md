@@ -3,6 +3,9 @@
 [![Build Status](https://dev.azure.com/getzola/zola/_apis/build/status/getzola.zola?branchName=master)](https://dev.azure.com/getzola/zola/_build/latest?definitionId=1&branchName=master)
 ![GitHub all releases](https://img.shields.io/github/downloads/getzola/zola/total)
 
+Temporary fork of [zola](https://github.com/getzola/zola) that implements JPEG-XL image processing with [jpegxl-rs](https://github.com/inflation/jpegxl-rs).
+Won't be pushed upstream due to licensing (jpegxl-rs is GPL) and the image crate intends on implementing it themselves eventually.
+
 A fast static site generator in a single binary with everything built-in.
 
 Documentation is available on [its site](https://www.getzola.org/documentation/getting-started/installation/) or
