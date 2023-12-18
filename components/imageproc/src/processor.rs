@@ -76,7 +76,7 @@ impl ImageOp {
                 let runner = ThreadsRunner::default();
                 let mut builder = jpegxl_rs::encoder_builder();
                 let mut encoder = match q {
-                    Some(q) => builder.quality(3 - 3 * (q as f32 / 100.0)),
+                    Some(q) => builder.quality(3.0 - 3.0 * (q as f32 / 100.0)),
                     None => builder.lossless(true)
                 }
                     .parallel_runner(&runner)
