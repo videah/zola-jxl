@@ -84,7 +84,10 @@ impl ImageOp {
                     .speed(EncoderSpeed::Tortoise)
                     .build()?;
 
-                encoder.uses_original_profile = true;
+                // If quality is not set, we need to use the original profile for lossless encoding.
+                if q.is_none() {
+                    encoder.uses_original_profile = true;
+                }
 
                 let raw_img = img.to_rgba16();
                 let frame = EncoderFrame::new(&raw_img).num_channels(4);
