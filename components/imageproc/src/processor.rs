@@ -9,8 +9,10 @@ use libs::ahash::{HashMap, HashSet};
 use libs::image::imageops::FilterType;
 use libs::image::{EncodableLayout, ImageOutputFormat};
 use libs::rayon::prelude::*;
-use libs::{image, webp};
+use libs::{image, webp, jpegxl_rs};
 use serde::{Deserialize, Serialize};
+use libs::jpegxl_rs::encode::{EncoderFrame, EncoderResult, EncoderSpeed};
+use libs::jpegxl_rs::ThreadsRunner;
 use utils::fs as ufs;
 
 use crate::format::Format;
@@ -68,6 +70,25 @@ impl ImageOp {
                     Some(q) => encoder.encode(q as f32),
                     None => encoder.encode_lossless(),
                 };
+                buffered_f.write_all(memory.as_bytes())?;
+            }
+            Format::Jxl(q) => {
+                let runner = ThreadsRunner::default();
+                let mut builder = jpegxl_rs::encoder_builder();
+                let mut encoder = match q {
+                    Some(q) => builder.quality(3 - 3 * (q as f32 / 100.0)),
+                    None => builder.lossless(true)
+                }
+                    .parallel_runner(&runner)
+                    .has_alpha(true)
+                    .speed(EncoderSpeed::Tortoise)
+                    .build()?;
+
+                encoder.uses_original_profile = true;
+
+                let raw_img = img.to_rgba16();
+                let frame = EncoderFrame::new(&raw_img).num_channels(4);
+                let memory: EncoderResult<f32> = encoder.encode_frame(&frame, img.width(), img.height())?;
                 buffered_f.write_all(memory.as_bytes())?;
             }
         }

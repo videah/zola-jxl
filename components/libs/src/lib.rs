@@ -43,3 +43,4 @@ pub use unicode_segmentation;
 pub use url;
 pub use walkdir;
 pub use webp;
+pub use jpegxl_rs;
